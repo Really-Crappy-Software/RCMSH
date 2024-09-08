@@ -4,13 +4,24 @@
 #include <dirent.h>
 #include <errno.h>
 
+void panic(char reason[]) {
+  printf("PANIC: %s", reason);
+  return;
+}
+
 int main() {
   FILE *fptr;
+  FILE *host;
   DIR *folder;
 bool shell = true;
   while (shell = true) {
+    host = fopen("/etc/hostname", "r");
+    char hostname[15];
     char location[30];
     char input[10];
+    fgets(hostname, 15, host);
+    hostname[strcspn(hostname, "\n")] = 0;
+    printf("%s:", hostname);
     fgets(input, 10, stdin);
      input[strcspn(input, "\n")] = 0;
     // why wont strcmp work?
@@ -36,8 +47,7 @@ bool shell = true;
       char fname[40];
       folder = opendir(".");
       if(folder == NULL) {
-        perror("Hmm it doesn't seem that this folder exists");
-        return 1;
+        panic("How are you in a directory that does not exist?");
       }
 
       while( (entry=readdir(folder)) ) {
@@ -46,7 +56,6 @@ bool shell = true;
       }
       closedir(folder);
     }
-
     else {
       printf("rcsh: '%s' command not found, maybe use help?\n");
       }
