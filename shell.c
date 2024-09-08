@@ -1,9 +1,12 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <string.h>
+#include <dirent.h>
+#include <errno.h>
 
 int main() {
   FILE *fptr;
+  DIR *folder;
 bool shell = true;
   while (shell = true) {
     char location[30];
@@ -12,7 +15,7 @@ bool shell = true;
      input[strcspn(input, "\n")] = 0;
     // why wont strcmp work?
     if (strcmp(input, "help") == 0) {
-    printf("help: displays this \n print: prints something(only input print)\n create: creates files\n version: check the version\n exit: stops this\n");
+    printf("help: displays this \n print: prints something(only input print)\n create: creates files\n version: check the version\n ls: displays the files in current location\n exit: stops this\n");
   } 
     else if (strcmp(input, "print") == 0) {
     char print[30];
@@ -27,6 +30,21 @@ bool shell = true;
       fptr = fopen(location, "w");
     } else if (strcmp(input, "version") == 0) {
       printf("Really Crap SHell ver 0.1\n");
+    } else if (strcmp(input, "ls") == 0) {
+      struct dirent *entry;
+      int files = 0;
+      char fname[40];
+      folder = opendir(".");
+      if(folder == NULL) {
+        perror("Hmm it doesn't seem that this folder exists");
+        return 1;
+      }
+
+      while( (entry=readdir(folder)) ) {
+        files++;
+        printf("FILE %3d: %s\n", files, entry->d_name);
+      }
+      closedir(folder);
     }
 
     else {
