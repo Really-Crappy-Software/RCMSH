@@ -16,11 +16,11 @@ int main() {
   FILE *host;
   DIR *folder;
 bool shell = true;
-  while (shell = true) {
     if (startmsg==true) {
       printf("Welcome to the Really Crappy Microshell\n");
       printf("type help to start\n");
     }
+   while (shell==true) {
     host = fopen("/etc/hostname", "r");
     char brazillianmiku[250];
     char hostname[15];
