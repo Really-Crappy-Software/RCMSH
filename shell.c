@@ -19,12 +19,14 @@ bool shell = true;
     if (startmsg==true) {
       printf("Welcome to the Really Crappy Microshell\n");
       printf("type help to start\n");
+    } else {
+
     }
    while (shell==true) {
     host = fopen("/etc/hostname", "r");
-    char brazillianmiku[250];
     char hostname[15];
     char location[30];
+    char brazillianmiku[250];
     char input[10];
     char input2[100] = "EOF";
     char currentdir[100];
@@ -44,15 +46,14 @@ bool shell = true;
   } else if (strcmp(input, "exit") == 0) {
       return 0;
     } else if (strcmp(input, "create") == 0) {
-      printf("Please input the location of this file (make sure to include the file name and extension at the end)\n");
-      fptr = fopen(input2, "w");
+     fptr = fopen(input2, "w");
     } else if (strcmp(input, "version") == 0) {
       printf("Really Crap Micro Shell ver 0.2\n");
     } else if (strcmp(input, "ls") == 0) {
       struct dirent *entry;
       int files = 0;
       char fname[40];
-      folder = opendir(input2);
+      folder = opendir(brazillianmiku);
       if(folder == NULL) {
         panic("How are you in a directory that does not exist?");
       }
@@ -63,7 +64,8 @@ bool shell = true;
       }
       closedir(folder);
     } else if (strcmp(input, "cd") == 0) {
-      printf("The current directory is %s\n", input2);
+     strcpy(brazillianmiku, input2);
+      printf("The current directory is %s\n", brazillianmiku);
     } else if (strcmp(input, "mkdir") == 0) {
             int ret = mkdir(input2, S_IRWXU);
       if (ret == -1) {
