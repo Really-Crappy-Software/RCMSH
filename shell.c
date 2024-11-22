@@ -26,7 +26,6 @@ bool shell = true;
     host = fopen("/etc/hostname", "r");
     char hostname[15];
     char location[30];
-    char brazillianmiku[250];
     char input[10];
     char input2[100] = "EOF";
     char currentdir[100];
@@ -53,7 +52,7 @@ bool shell = true;
       struct dirent *entry;
       int files = 0;
       char fname[40];
-      folder = opendir(brazillianmiku);
+      folder = opendir(".");
       if(folder == NULL) {
         panic("How are you in a directory that does not exist?");
       }
@@ -64,8 +63,7 @@ bool shell = true;
       }
       closedir(folder);
     } else if (strcmp(input, "cd") == 0) {
-     strcpy(brazillianmiku, input2);
-      printf("The current directory is %s\n", brazillianmiku);
+     chdir(input2);
     } else if (strcmp(input, "mkdir") == 0) {
             int ret = mkdir(input2, S_IRWXU);
       if (ret == -1) {
