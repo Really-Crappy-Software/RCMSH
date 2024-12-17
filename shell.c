@@ -1,27 +1,21 @@
 #include <stdio.h>
 #include <stdbool.h>
+#include <stdlib.h>
 #include <string.h>
 #include <dirent.h>
 #include <errno.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include </etc/shell.cfg>
-void panic(char reason[]) {
-  printf("PANIC: %s", reason);
-  return;
-}
-
+#include <unistd.h>
+#include <sys/types.h>
+#include <signal.h>
+#include <sys/wait.h>
+int test;
 int main() {
   FILE *fptr;
   FILE *host;
   DIR *folder;
 bool shell = true;
-    if (startmsg==true) {
-      printf("Welcome to the Really Crappy Microshell\n");
-      printf("type help to start\n");
-    } else {
-
-    }
    while (shell==true) {
     host = fopen("/etc/hostname", "r");
     char hostname[15];
@@ -32,11 +26,14 @@ bool shell = true;
     fgets(hostname, 15, host);
     hostname[strcspn(hostname, "\n")] = 0;
     printf("%s:", hostname);
-    scanf("%s %s", input, input2);
-    // Somehow this fucked up one worded commands (well I kinda know)
-     input[strcspn(input, "\n")] = 0;
-     input2[strcspn(input2, "\n")] = 0;
-    // why wont strcmp work?
+    fgets(input, 10, stdin);
+    	int sargn = strcspn(input, " ");
+    			strcpy(input2, input);
+    			input[sargn] = 0;
+    			int msargn = sargn + 1;
+    			memmove(input2, input2 + msargn, 100 - sargn);
+    			input[strcspn(input, "\n")] = 0;
+    			input2[strcspn(input2, "\n")] = 0;
     if (strcmp(input, "help") == 0) {
     printf("help: displays this \n print: prints something\n create: creates files\n cd: changes the directory\n version: check the version\n ls: displays the files in current location\n exit: stops this\n mkdir: creates a directory\n");
   } 
@@ -54,7 +51,7 @@ bool shell = true;
       char fname[40];
       folder = opendir(".");
       if(folder == NULL) {
-        panic("How are you in a directory that does not exist?");
+        printf("How are you in a directory that does not exist?");
       }
 
       while( (entry=readdir(folder)) ) {
@@ -69,9 +66,19 @@ bool shell = true;
       if (ret == -1) {
         printf("didn't work\n");
       }
-    }
-    else {
-      printf("rcsh: '%s' command not found, maybe use help?\n", input);
+    } else if (strcmp(input, "exec") == 0) {
+        system(input2);
       }
+      else {
+        pid_t winblows = fork();
+        if (winblows==0) {
+        test = execlp(input, NULL, NULL);
+        printf("%d\n", test);
+        }
+        wait(NULL);
+        if (test == -1) {
+        printf("rcsh: '%s' command not found, maybe use help?\n", input);
+        }
+    }
   }
 }
