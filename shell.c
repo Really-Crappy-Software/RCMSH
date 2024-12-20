@@ -20,13 +20,14 @@ bool shell = true;
     host = fopen("/etc/hostname", "r");
     char hostname[15];
     char location[30];
-    char input[10];
-    char input2[100] = "EOF";
+    char input[100];
+    char array[100];
+    char input2[100];
     char currentdir[100];
     fgets(hostname, 15, host);
     hostname[strcspn(hostname, "\n")] = 0;
     printf("%s:", hostname);
-    fgets(input, 10, stdin);
+    fgets(input, 100, stdin);
     	int sargn = strcspn(input, " ");
     			strcpy(input2, input);
     			input[sargn] = 0;
@@ -70,13 +71,18 @@ bool shell = true;
         system(input2);
       }
       else {
-        pid_t winblows = fork();
+    	  strcat(array, input);
+    	  strcat(array, " ");
+    	  strcat(array, input2);
+    	  pid_t winblows = fork();
         if (winblows==0) {
-        test = execlp(input, NULL, NULL);
-        printf("%d\n", test);
+        test = system(array);
+        return 0;
         }
+        strcpy(array, "");
         wait(NULL);
-        if (test == -1) {
+        printf("%s\n", array);
+        if (test < 0) {
         printf("rcsh: '%s' command not found, maybe use help?\n", input);
         }
     }
